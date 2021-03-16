@@ -28,6 +28,10 @@ const users = [
 function checksExistsUserAccount(request, response, next) {
   const { username } = request.headers;
 
+  if (!username) {
+    return response.status(400).json({ error: "Username has to be informed." });
+  }
+
   const userFound = users.find((user) => user.username === username);
 
   if (!userFound) {
@@ -132,6 +136,12 @@ app.delete("/todos/:id", checksExistsUserAccount, (request, response) => {
   const { todos } = users.find((user) => user.username === request.username);
 
   const todoIndex = todos.findIndex((todo) => todo.id === id);
+
+  if (todoIndex === -1) {
+    return response.status(404).json({
+      error: "TODO not found.",
+    });
+  }
 
   todos.splice(todoIndex, 1);
 
