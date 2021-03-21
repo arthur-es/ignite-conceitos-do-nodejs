@@ -8,22 +8,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-const users = [
-  {
-    id: "uuid",
-    name: "Danilo Vieira",
-    username: "danilo",
-    todos: [
-      {
-        id: "e3ce566c-fd13-4491-9e56-567c6c0b39c0",
-        title: "Fazer projeto x",
-        done: false,
-        deadline: "2021-03-21T00:00:00.000Z",
-        created_at: "2021-03-16T20:15:22.113Z",
-      },
-    ],
-  },
-];
+const users = [];
 
 function checksExistsUserAccount(request, response, next) {
   const { username } = request.headers;
@@ -64,7 +49,7 @@ app.post("/users", (request, response) => {
 
   users.push(newUser);
 
-  return response.status(201).send();
+  return response.status(201).json(newUser);
 });
 
 app.get("/todos", checksExistsUserAccount, (request, response) => {
@@ -88,7 +73,7 @@ app.post("/todos", checksExistsUserAccount, (request, response) => {
 
   todos.push(newTodo);
 
-  return response.status(201).send();
+  return response.status(201).json(newTodo);
 });
 
 app.put("/todos/:id", checksExistsUserAccount, (request, response) => {
@@ -109,7 +94,7 @@ app.put("/todos/:id", checksExistsUserAccount, (request, response) => {
   todoFound.title = title;
   todoFound.deadline = new Date(deadline);
 
-  return response.status(200).send();
+  return response.status(200).json(todoFound);
 });
 
 app.patch("/todos/:id/done", checksExistsUserAccount, (request, response) => {
@@ -127,7 +112,7 @@ app.patch("/todos/:id/done", checksExistsUserAccount, (request, response) => {
 
   todoFound.done = true;
 
-  return response.status(200).send();
+  return response.status(200).json(todoFound);
 });
 
 app.delete("/todos/:id", checksExistsUserAccount, (request, response) => {
@@ -145,7 +130,7 @@ app.delete("/todos/:id", checksExistsUserAccount, (request, response) => {
 
   todos.splice(todoIndex, 1);
 
-  return response.status(200).send();
+  return response.status(204).send();
 });
 
 module.exports = app;
